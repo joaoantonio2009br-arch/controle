@@ -20,12 +20,10 @@
 :root{
   --bg:#000;
   --card:#101014;
-  --border:#232336;
+  --border:#242438;
 
   --p1:#00e5ff;
   --p2:#ff6b35;
-
-  --muted:#55556d;
 }
 
 html,body{
@@ -37,46 +35,7 @@ html,body{
   color:white;
 
   font-family:'Space Mono',monospace;
-
   touch-action:none;
-}
-
-/* ROTATE */
-
-#rotate{
-  display:none;
-
-  position:fixed;
-  inset:0;
-  z-index:999;
-
-  background:#000;
-
-  align-items:center;
-  justify-content:center;
-
-  text-align:center;
-
-  color:#777;
-  font-size:14px;
-}
-
-@media (orientation:portrait){
-
-  #rotate{
-    display:flex;
-  }
-
-  #app{
-    display:none!important;
-  }
-}
-
-/* APP */
-
-#app{
-  width:100%;
-  height:100%;
 }
 
 /* CONNECT */
@@ -96,7 +55,7 @@ html,body{
 
 .logo{
   font-family:'Syne',sans-serif;
-  font-size:34px;
+  font-size:36px;
   font-weight:800;
 
   background:linear-gradient(90deg,var(--p1),var(--p2));
@@ -106,9 +65,9 @@ html,body{
 
 .sub{
   text-align:center;
-  color:#66668f;
-  font-size:12px;
+  color:#666;
   line-height:1.8;
+  font-size:12px;
 }
 
 .row{
@@ -126,9 +85,9 @@ html,body{
   font-size:14px;
   font-weight:700;
 
-  cursor:pointer;
-
   transition:.1s;
+
+  cursor:pointer;
 }
 
 .pick:active{
@@ -146,8 +105,8 @@ html,body{
 }
 
 #status{
-  min-height:20px;
-  color:#66668f;
+  min-height:18px;
+  color:#666;
   font-size:11px;
 }
 
@@ -162,20 +121,16 @@ html,body{
   position:relative;
 }
 
-/* PLAYER */
-
 #player{
   position:absolute;
 
-  left:20px;
   top:18px;
+  left:20px;
 
   font-family:'Syne',sans-serif;
   font-size:34px;
   font-weight:800;
 }
-
-/* CENTER */
 
 #middle{
   position:absolute;
@@ -230,13 +185,14 @@ html,body{
   font-size:34px;
 
   position:relative;
-  overflow:hidden;
 
   transition:
     transform .05s,
     background .05s,
     border-color .05s,
     box-shadow .05s;
+
+  overflow:hidden;
 
   touch-action:none;
 }
@@ -253,7 +209,7 @@ html,body{
     transparent 70%);
 
   opacity:0;
-  transition:opacity .1s;
+  transition:.1s;
 }
 
 .dbtn.pressed::after{
@@ -292,17 +248,17 @@ html,body{
 
   border-radius:14px;
 
-  border:1px solid #232338;
-  background:#111118;
+  border:1px solid #242438;
+  background:#101014;
 
   color:white;
 
   font-family:'Space Mono',monospace;
   font-size:11px;
 
-  cursor:pointer;
-
   transition:.1s;
+
+  cursor:pointer;
 }
 
 .abtn:active{
@@ -344,92 +300,92 @@ body.p2 .dbtn.pressed{
 </head>
 <body>
 
-<div id="rotate">
-  Gire o celular para jogar deitado
-</div>
+<!-- CONNECT -->
 
-<div id="app">
+<div id="connect">
 
-  <!-- CONNECT -->
+  <div class="logo">
+    CARREGADORES
+  </div>
 
-  <div id="connect">
+  <div class="sub">
+    Escolha seu jogador<br>
+    Máximo 2 controles simultâneos
+  </div>
 
-    <div class="logo">CARREGADORES</div>
+  <div class="row">
 
-    <div class="sub">
-      Escolha seu jogador<br>
-      Máximo 2 controles simultâneos
-    </div>
+    <button class="pick p1" onclick="connect(1)">
+      ● J1
+    </button>
 
-    <div class="row">
-      <button class="pick p1" onclick="connect(1)">
-        ● J1
-      </button>
-
-      <button class="pick p2" onclick="connect(2)">
-        ● J2
-      </button>
-    </div>
-
-    <div id="status">
-      Escolha seu jogador
-    </div>
+    <button class="pick p2" onclick="connect(2)">
+      ● J2
+    </button>
 
   </div>
 
-  <!-- CONTROLLER -->
+  <div id="status">
+    Escolha seu jogador
+  </div>
 
-  <div id="controller">
+</div>
 
-    <div id="player">J1</div>
+<!-- CONTROLLER -->
 
-    <div id="middle">UDEV</div>
+<div id="controller">
 
-    <!-- DPAD -->
+  <div id="player">
+    J1
+  </div>
 
-    <div id="dpad">
+  <div id="middle">
+    UDEV
+  </div>
 
-      <div class="empty"></div>
+  <!-- DPAD -->
 
-      <div class="dbtn" data-dir="up">
-        ↑
-      </div>
+  <div id="dpad">
 
-      <div class="empty"></div>
+    <div class="empty"></div>
 
-      <div class="dbtn" data-dir="left">
-        ←
-      </div>
-
-      <div class="empty"></div>
-
-      <div class="dbtn" data-dir="right">
-        →
-      </div>
-
-      <div class="empty"></div>
-
-      <div class="dbtn" data-dir="down">
-        ↓
-      </div>
-
-      <div class="empty"></div>
-
+    <div class="dbtn" data-dir="up">
+      ↑
     </div>
 
-    <!-- ACTIONS -->
+    <div class="empty"></div>
 
-    <div id="actions">
-
-      <button class="abtn" onclick="sendAction('restart')">
-        ↺<br>RESTART
-      </button>
-
-      <button class="abtn" onclick="disconnect()">
-        SAIR
-      </button>
-
+    <div class="dbtn" data-dir="left">
+      ←
     </div>
+
+    <div class="empty"></div>
+
+    <div class="dbtn" data-dir="right">
+      →
+    </div>
+
+    <div class="empty"></div>
+
+    <div class="dbtn" data-dir="down">
+      ↓
+    </div>
+
+    <div class="empty"></div>
+
+  </div>
+
+  <!-- ACTIONS -->
+
+  <div id="actions">
+
+    <button class="abtn" onclick="sendAction('restart')">
+      ↺<br>RESTART
+    </button>
+
+    <button class="abtn" onclick="disconnect()">
+      SAIR
+    </button>
 
   </div>
 
@@ -462,9 +418,9 @@ async function fbPut(path,val){
 
 async function connect(player){
 
-  const st = document.getElementById("status");
+  const status = document.getElementById("status");
 
-  st.textContent = "Conectando...";
+  status.textContent = "Conectando...";
 
   try{
 
@@ -478,7 +434,19 @@ async function connect(player){
     myP = player;
     seq = 0;
 
-    showController();
+    document.getElementById("connect").style.display =
+      "none";
+
+    document.getElementById("controller").style.display =
+      "block";
+
+    document.getElementById("player").textContent =
+      "J" + player;
+
+    document.body.classList.remove("p1","p2");
+    document.body.classList.add("p"+player);
+
+    status.textContent = "Conectado";
 
     hbTimer = setInterval(()=>{
 
@@ -488,21 +456,9 @@ async function connect(player){
 
   }catch(e){
 
-    st.textContent = "Erro ao conectar";
+    status.textContent =
+      "Erro ao conectar";
   }
-}
-
-function showController(){
-
-  document.getElementById("connect").style.display = "none";
-
-  document.getElementById("controller").style.display = "block";
-
-  document.getElementById("player").textContent =
-    "J" + myP;
-
-  document.body.classList.remove("p1","p2");
-  document.body.classList.add("p"+myP);
 }
 
 /* DISCONNECT */
@@ -515,15 +471,17 @@ async function disconnect(){
 
     await fbPut(`/input/p${myP}/connected`,false);
 
-  }catch{}
+  }catch(e){}
 
   clearInterval(hbTimer);
 
   myP = null;
 
-  document.getElementById("controller").style.display = "none";
+  document.getElementById("controller").style.display =
+    "none";
 
-  document.getElementById("connect").style.display = "flex";
+  document.getElementById("connect").style.display =
+    "flex";
 
   document.body.classList.remove("p1","p2");
 }
@@ -546,22 +504,22 @@ async function sendDir(dir){
       ts:Date.now()
     });
 
-  }catch{}
+  }catch(e){}
 }
 
-function sendAction(a){
+function sendAction(action){
 
-  sendDir(a);
+  sendDir(action);
 }
 
-/* BUTTONS */
+/* DPAD */
 
 const btns = document.querySelectorAll(".dbtn");
 
 const holdTimers = {};
 
 const INITIAL_DELAY = 180;
-const REPEAT_DELAY = 75;
+const REPEAT_DELAY = 70;
 
 function startPress(btn){
 
@@ -628,7 +586,7 @@ btns.forEach(btn=>{
 
 });
 
-/* BLOCK SCROLL */
+/* PREVENT SCROLL */
 
 document.addEventListener("touchstart",e=>{
   e.preventDefault();
@@ -638,7 +596,7 @@ document.addEventListener("touchmove",e=>{
   e.preventDefault();
 },{passive:false});
 
-/* KEYBOARD */
+/* KEYBOARD TEST */
 
 const kmap = {
 
