@@ -19,8 +19,8 @@
 
 :root{
   --bg:#000;
-  --card:#0f0f14;
-  --border:#202030;
+  --card:#101014;
+  --border:#232336;
 
   --p1:#00e5ff;
   --p2:#ff6b35;
@@ -37,6 +37,7 @@ html,body{
   color:white;
 
   font-family:'Space Mono',monospace;
+
   touch-action:none;
 }
 
@@ -53,14 +54,15 @@ html,body{
 
   align-items:center;
   justify-content:center;
-  flex-direction:column;
-  gap:20px;
 
   text-align:center;
-  color:#666;
+
+  color:#777;
+  font-size:14px;
 }
 
 @media (orientation:portrait){
+
   #rotate{
     display:flex;
   }
@@ -116,7 +118,7 @@ html,body{
 
 .pick{
   border:none;
-  border-radius:16px;
+  border-radius:18px;
 
   padding:18px 34px;
 
@@ -144,7 +146,7 @@ html,body{
 }
 
 #status{
-  min-height:18px;
+  min-height:20px;
   color:#66668f;
   font-size:11px;
 }
@@ -165,7 +167,7 @@ html,body{
 #player{
   position:absolute;
 
-  left:22px;
+  left:20px;
   top:18px;
 
   font-family:'Syne',sans-serif;
@@ -173,7 +175,7 @@ html,body{
   font-weight:800;
 }
 
-/* CENTER TEXT */
+/* CENTER */
 
 #middle{
   position:absolute;
@@ -203,8 +205,8 @@ html,body{
 
   transform:translateY(-50%);
 
-  width:230px;
-  height:230px;
+  width:240px;
+  height:240px;
 
   display:grid;
 
@@ -215,7 +217,7 @@ html,body{
 }
 
 .dbtn{
-  border-radius:20px;
+  border-radius:22px;
 
   background:var(--card);
 
@@ -227,14 +229,16 @@ html,body{
 
   font-size:34px;
 
-  transition:
-    transform .06s,
-    background .06s,
-    border-color .06s,
-    box-shadow .06s;
-
   position:relative;
   overflow:hidden;
+
+  transition:
+    transform .05s,
+    background .05s,
+    border-color .05s,
+    box-shadow .05s;
+
+  touch-action:none;
 }
 
 .dbtn::after{
@@ -245,8 +249,8 @@ html,body{
 
   background:
     radial-gradient(circle at center,
-      rgba(255,255,255,.15),
-      transparent 70%);
+    rgba(255,255,255,.16),
+    transparent 70%);
 
   opacity:0;
   transition:opacity .1s;
@@ -277,6 +281,7 @@ html,body{
 
   display:flex;
   flex-direction:column;
+
   gap:14px;
 }
 
@@ -285,11 +290,10 @@ html,body{
 
   padding:14px;
 
-  border:none;
   border-radius:14px;
 
+  border:1px solid #232338;
   background:#111118;
-  border:1px solid #242438;
 
   color:white;
 
@@ -319,7 +323,7 @@ body.p1 .dbtn.pressed{
   border-color:var(--p1);
   background:#00e5ff18;
 
-  box-shadow:0 0 18px #00e5ff44;
+  box-shadow:0 0 18px #00e5ff55;
 }
 
 body.p2 #player{
@@ -334,7 +338,7 @@ body.p2 .dbtn.pressed{
   border-color:var(--p2);
   background:#ff6b3518;
 
-  box-shadow:0 0 18px #ff6b3544;
+  box-shadow:0 0 18px #ff6b3555;
 }
 </style>
 </head>
@@ -358,8 +362,13 @@ body.p2 .dbtn.pressed{
     </div>
 
     <div class="row">
-      <button class="pick p1" onclick="connect(1)">● J1</button>
-      <button class="pick p2" onclick="connect(2)">● J2</button>
+      <button class="pick p1" onclick="connect(1)">
+        ● J1
+      </button>
+
+      <button class="pick p2" onclick="connect(2)">
+        ● J2
+      </button>
     </div>
 
     <div id="status">
@@ -436,9 +445,13 @@ let hbTimer = null;
 /* FIREBASE */
 
 async function fbPut(path,val){
+
   return fetch(`${FB}${path}.json`,{
+
     method:"PUT",
+
     body:JSON.stringify(val),
+
     headers:{
       "Content-Type":"application/json"
     }
@@ -468,7 +481,9 @@ async function connect(player){
     showController();
 
     hbTimer = setInterval(()=>{
+
       fbPut(`/input/p${myP}/ts`,Date.now());
+
     },4000);
 
   }catch(e){
@@ -480,6 +495,7 @@ async function connect(player){
 function showController(){
 
   document.getElementById("connect").style.display = "none";
+
   document.getElementById("controller").style.display = "block";
 
   document.getElementById("player").textContent =
@@ -496,7 +512,9 @@ async function disconnect(){
   if(!myP) return;
 
   try{
+
     await fbPut(`/input/p${myP}/connected`,false);
+
   }catch{}
 
   clearInterval(hbTimer);
@@ -504,6 +522,7 @@ async function disconnect(){
   myP = null;
 
   document.getElementById("controller").style.display = "none";
+
   document.getElementById("connect").style.display = "flex";
 
   document.body.classList.remove("p1","p2");
@@ -520,6 +539,7 @@ async function sendDir(dir){
   try{
 
     await fbPut(`/input/p${myP}`,{
+
       connected:true,
       dir,
       seq,
@@ -530,17 +550,18 @@ async function sendDir(dir){
 }
 
 function sendAction(a){
+
   sendDir(a);
 }
 
-/* DPAD */
+/* BUTTONS */
 
 const btns = document.querySelectorAll(".dbtn");
 
 const holdTimers = {};
 
-const INITIAL_DELAY = 200;
-const REPEAT_DELAY = 80;
+const INITIAL_DELAY = 180;
+const REPEAT_DELAY = 75;
 
 function startPress(btn){
 
@@ -588,28 +609,26 @@ btns.forEach(btn=>{
 
     e.preventDefault();
 
-    btn.setPointerCapture(e.pointerId);
-
     startPress(btn);
   });
 
-  btn.addEventListener("pointerup",()=>{
+  btn.addEventListener("pointerup",e=>{
+
+    e.preventDefault();
 
     endPress(btn);
   });
 
-  btn.addEventListener("pointercancel",()=>{
+  btn.addEventListener("pointercancel",e=>{
+
+    e.preventDefault();
 
     endPress(btn);
   });
 
-  btn.addEventListener("pointerleave",()=>{
-
-    endPress(btn);
-  });
 });
 
-/* PREVENT ZOOM */
+/* BLOCK SCROLL */
 
 document.addEventListener("touchstart",e=>{
   e.preventDefault();
@@ -619,9 +638,10 @@ document.addEventListener("touchmove",e=>{
   e.preventDefault();
 },{passive:false});
 
-/* KEYBOARD TEST */
+/* KEYBOARD */
 
 const kmap = {
+
   ArrowUp:"up",
   ArrowDown:"down",
   ArrowLeft:"left",
