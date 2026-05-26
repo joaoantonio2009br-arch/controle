@@ -2,385 +2,381 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-  <title>CONTROLE — CARREGADORES</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+  <title>Controle — Carregadores</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&family=Syne:wght@800&display=swap" rel="stylesheet">
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;}
 
-    :root {
-      --bg: #09090f;
-      --ui: #12121e;
-      --p1: #00e5ff;
-      --p2: #ff6b35;
-      --border: #2a2a42;
+    :root{
+      --bg:#080810;
+      --card:#111120;
+      --border:#1e1e36;
+      --p1:#00e5ff;
+      --p2:#ff6b35;
+      --accent:#fff;
+      --muted:#44446a;
     }
 
-    html, body {
-      width:100%; height:100%;
+    html,body{
+      width:100%;height:100%;
       background:var(--bg);
       color:#e8e8f0;
-      font-family:'Space Mono', monospace;
-      overflow:hidden;
-      /* Force landscape */
-    }
-
-    /* Lock to landscape via CSS — visual guide only, JS handles rotation */
-    #rotate-msg {
-      display:none;
-      position:fixed; inset:0;
-      background:var(--bg);
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:16px;
-      font-size:14px;
-      color:#666;
-      z-index:999;
-    }
-    #rotate-msg .icon { font-size:48px; animation: spin 2s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    @media (orientation: portrait) {
-      #rotate-msg { display:flex; }
-      #app { display:none; }
-    }
-
-    /* ── MAIN LAYOUT ── */
-    #app {
-      width:100%; height:100%;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-    }
-
-    /* Connection screen */
-    #connect-screen {
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:20px;
-      padding:24px;
-      text-align:center;
-      height:100%;
-    }
-    #connect-screen h1 {
-      font-family:'Syne',sans-serif;
-      font-size:26px;
-      font-weight:800;
-    }
-    #connect-screen p { color:#666; font-size:12px; line-height:1.7; }
-
-    .btn-connect {
-      padding:14px 36px;
-      border-radius:12px;
-      border:none;
-      cursor:pointer;
       font-family:'Space Mono',monospace;
-      font-size:14px;
-      font-weight:700;
-      letter-spacing:1px;
-      transition: opacity .15s, transform .1s;
+      overflow:hidden;
+      touch-action:none;
     }
-    .btn-connect:active { transform:scale(.96); opacity:.85; }
-    .btn-p1 { background:var(--p1); color:#000; }
-    .btn-p2 { background:var(--p2); color:#fff; }
-    .btn-row { display:flex; gap:16px; }
 
-    #status-msg { font-size:12px; color:#666; min-height:18px; }
-
-    /* Controller screen */
-    #ctrl-screen {
+    /* ── ROTATE PROMPT ── */
+    #rotate{
       display:none;
-      width:100%; height:100%;
+      position:fixed;inset:0;z-index:999;
+      background:var(--bg);
+      align-items:center;justify-content:center;
+      flex-direction:column;gap:20px;
+      font-size:13px;color:var(--muted);text-align:center;
+    }
+    #rotate svg{
+      width:56px;height:56px;
+      animation:rotateSvg 2.5s ease-in-out infinite;
+    }
+    @keyframes rotateSvg{
+      0%,100%{transform:rotate(0deg);}
+      40%{transform:rotate(-90deg);}
+      60%{transform:rotate(-90deg);}
+    }
+    @media(orientation:portrait){
+      #rotate{display:flex;}
+      #app{display:none!important;}
+    }
+
+    /* ── APP SHELL ── */
+    #app{
+      width:100%;height:100%;
+      display:flex;
+      align-items:stretch;
+      justify-content:center;
+    }
+
+    /* ── CONNECT SCREEN ── */
+    #connect-screen{
+      display:flex;
+      flex-direction:column;
+      align-items:center;justify-content:center;
+      gap:24px;padding:32px;
+      width:100%;
+    }
+    #connect-screen h1{
+      font-family:'Syne',sans-serif;
+      font-size:28px;font-weight:800;
+      background:linear-gradient(90deg,var(--p1),var(--p2));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .cs-sub{color:var(--muted);font-size:12px;text-align:center;line-height:1.8;}
+    .btn-row{display:flex;gap:16px;}
+    .btn-player{
+      padding:16px 32px;border-radius:14px;border:none;
+      font-family:'Space Mono',monospace;font-size:13px;font-weight:700;
+      letter-spacing:1px;cursor:pointer;
+      transition:transform .1s,opacity .1s,box-shadow .2s;
+    }
+    .btn-player:active{transform:scale(.93);opacity:.8;}
+    .btn-p1{background:var(--p1);color:#000;box-shadow:0 0 24px var(--p1)55;}
+    .btn-p2{background:var(--p2);color:#fff;box-shadow:0 0 24px var(--p2)55;}
+    #cs-status{font-size:11px;color:var(--muted);min-height:16px;}
+
+    /* ── CONTROLLER SCREEN ── */
+    #ctrl-screen{
+      display:none;
+      width:100%;
       flex-direction:row;
       align-items:center;
       justify-content:space-between;
-      padding:0 24px;
-      gap:12px;
+      padding:12px 20px 12px 16px;
+      gap:16px;
     }
 
-    /* Player indicator strip */
-    #player-strip {
+    /* Left: player info */
+    #info-panel{
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap:8px;
-      min-width:60px;
+      gap:10px;
+      min-width:56px;
     }
-    #player-label {
+    .glow-dot{
+      width:16px;height:16px;border-radius:50%;
+      transition:box-shadow .3s;
+    }
+    #info-label{
       font-family:'Syne',sans-serif;
-      font-size:20px;
-      font-weight:800;
+      font-size:22px;font-weight:800;
     }
-    #player-num { font-size:11px; color:#666; }
-    .dot-ctrl {
-      width:14px; height:14px; border-radius:50%;
-    }
+    #info-sub{font-size:9px;color:var(--muted);letter-spacing:1px;}
 
-    /* D-pad */
-    #dpad {
+    /* Center: D-pad */
+    #dpad{
       display:grid;
-      grid-template-columns: repeat(3, 72px);
-      grid-template-rows: repeat(3, 72px);
-      gap:6px;
+      grid-template-columns:repeat(3, 1fr);
+      grid-template-rows:repeat(3, 1fr);
+      gap:8px;
+      /* Size: fill available height */
+      height:calc(100vh - 24px);
+      width:calc(100vh - 24px);
+      max-height:220px;
+      max-width:220px;
     }
 
-    .dpad-btn {
-      border-radius:12px;
+    .dbtn{
+      border-radius:14px;
+      background:var(--card);
       border:2px solid var(--border);
-      background:var(--ui);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:22px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:26px;
       cursor:pointer;
-      transition: background .08s, transform .08s, border-color .08s;
-      touch-action:none;
+      transition:background .06s, transform .06s, border-color .06s, box-shadow .06s;
+      position:relative;
+      overflow:hidden;
     }
-    .dpad-btn.active {
-      background: rgba(255,255,255,.08);
-      transform:scale(.93);
+    /* Ripple layer */
+    .dbtn::after{
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(circle at center, rgba(255,255,255,.18) 0%, transparent 70%);
+      opacity:0;transition:opacity .12s;
+      border-radius:inherit;
     }
-    .dpad-center { background:transparent; border-color:transparent; cursor:default; }
+    .dbtn.pressed::after{opacity:1;}
+    .dbtn.pressed{
+      transform:scale(.88);
+    }
+    .dbtn-center{
+      background:transparent;border-color:transparent;cursor:default;
+    }
 
-    /* Restart button area */
-    #right-panel {
+    /* Right: action buttons */
+    #action-panel{
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap:12px;
-      min-width:70px;
+      gap:10px;
+      min-width:64px;
     }
-    #btn-restart {
-      padding:10px 16px;
+    .abtn{
+      padding:10px 14px;
       border-radius:10px;
       border:1px solid var(--border);
-      background:var(--ui);
-      color:#888;
+      background:var(--card);
       font-family:'Space Mono',monospace;
       font-size:10px;
-      cursor:pointer;
       letter-spacing:1px;
-    }
-    #btn-restart:active { background:#1f1f30; }
-    #btn-disconnect {
-      padding:8px 12px;
-      border-radius:8px;
-      border:1px solid #333;
-      background:transparent;
-      color:#444;
-      font-family:'Space Mono',monospace;
-      font-size:9px;
       cursor:pointer;
+      text-align:center;
+      line-height:1.5;
+      transition:background .1s,transform .08s;
+      width:64px;
     }
+    .abtn:active{transform:scale(.92);background:#1a1a2e;}
+    #btn-restart{color:#88aaff;}
+    #btn-out{color:var(--muted);font-size:9px;}
 
-    /* Color theming per player */
-    body.player1 #player-label { color:var(--p1); }
-    body.player1 .dpad-btn { border-color:var(--p1)44; }
-    body.player1 .dpad-btn.active { border-color:var(--p1); background:var(--p1)18; }
-    body.player1 #btn-restart { border-color:var(--p1)44; color:var(--p1); }
-    body.player2 #player-label { color:var(--p2); }
-    body.player2 .dpad-btn { border-color:var(--p2)44; }
-    body.player2 .dpad-btn.active { border-color:var(--p2); background:var(--p2)18; }
-    body.player2 #btn-restart { border-color:var(--p2)44; color:var(--p2); }
+    /* ── COLOR THEMES ── */
+    body.p1 #info-label{color:var(--p1);}
+    body.p1 .dbtn{border-color:var(--p1)33;}
+    body.p1 .dbtn.pressed{border-color:var(--p1);background:var(--p1)18;box-shadow:0 0 16px var(--p1)44;}
+    body.p1 #btn-restart{border-color:var(--p1)55;color:var(--p1);}
 
-    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap');
+    body.p2 #info-label{color:var(--p2);}
+    body.p2 .dbtn{border-color:var(--p2)33;}
+    body.p2 .dbtn.pressed{border-color:var(--p2);background:var(--p2)18;box-shadow:0 0 16px var(--p2)44;}
+    body.p2 #btn-restart{border-color:var(--p2)55;color:var(--p2);}
+
+    /* Vibration feedback via CSS — visual only */
+    @keyframes bump{0%,100%{transform:scale(1);}50%{transform:scale(.85);}}
   </style>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <!-- Rotate hint -->
-<div id="rotate-msg">
-  <div class="icon">📱</div>
-  <span>Gire o celular para<br>modo paisagem (deitado)</span>
+<div id="rotate">
+  <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="14" y="8" width="28" height="40" rx="5" stroke="#44446a" stroke-width="2.5"/>
+    <circle cx="28" cy="43" r="2" fill="#44446a"/>
+    <path d="M36 4 L42 10 L36 16" stroke="#00e5ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M42 10 Q20 10 20 28" stroke="#00e5ff" stroke-width="2" stroke-linecap="round" fill="none"/>
+  </svg>
+  <span>Gire o celular<br>para jogar deitado</span>
 </div>
 
 <div id="app">
 
-  <!-- CONNECTION SCREEN -->
+  <!-- CONNECTION -->
   <div id="connect-screen">
     <h1>CARREGADORES</h1>
-    <p>Conecte como Jogador 1 ou Jogador 2.<br>
-    Só pode haver <strong>2 controles</strong> ao mesmo tempo.</p>
+    <p class="cs-sub">Escolha seu jogador.<br>Máximo 2 controles simultâneos.</p>
     <div class="btn-row">
-      <button class="btn-connect btn-p1" onclick="connect(1)">JOGADOR 1</button>
-      <button class="btn-connect btn-p2" onclick="connect(2)">JOGADOR 2</button>
+      <button class="btn-player btn-p1" onclick="connect(1)">● J1</button>
+      <button class="btn-player btn-p2" onclick="connect(2)">● J2</button>
     </div>
-    <div id="status-msg">Escolha seu jogador</div>
+    <div id="cs-status">Escolha seu jogador</div>
   </div>
 
-  <!-- CONTROLLER SCREEN -->
+  <!-- CONTROLLER -->
   <div id="ctrl-screen">
 
-    <div id="player-strip">
-      <div class="dot-ctrl" id="dot-ctrl"></div>
-      <div id="player-label">J1</div>
-      <div id="player-num">JOGADOR</div>
+    <div id="info-panel">
+      <div class="glow-dot" id="info-dot"></div>
+      <div id="info-label">J1</div>
+      <div id="info-sub">JOGADOR</div>
     </div>
 
     <div id="dpad">
-      <!-- row 1 -->
+      <!-- row 1: up -->
       <div></div>
-      <div class="dpad-btn" id="btn-up"   data-dir="up">↑</div>
+      <div class="dbtn" id="btn-up"    data-dir="up">↑</div>
       <div></div>
-      <!-- row 2 -->
-      <div class="dpad-btn" id="btn-left" data-dir="left">←</div>
-      <div class="dpad-center"></div>
-      <div class="dpad-btn" id="btn-right" data-dir="right">→</div>
-      <!-- row 3 -->
+      <!-- row 2: left/center/right -->
+      <div class="dbtn" id="btn-left"  data-dir="left">←</div>
+      <div class="dbtn-center dbtn"></div>
+      <div class="dbtn" id="btn-right" data-dir="right">→</div>
+      <!-- row 3: down -->
       <div></div>
-      <div class="dpad-btn" id="btn-down" data-dir="down">↓</div>
+      <div class="dbtn" id="btn-down"  data-dir="down">↓</div>
       <div></div>
     </div>
 
-    <div id="right-panel">
-      <button id="btn-restart" onclick="sendRestart()">↺<br>RESTART</button>
-      <button id="btn-disconnect" onclick="disconnect()">SAIR</button>
+    <div id="action-panel">
+      <button class="abtn" id="btn-restart" onclick="sendAction('restart')">↺<br>RESTART</button>
+      <button class="abtn" id="btn-out" onclick="disconnect()">SAIR</button>
     </div>
 
   </div>
 </div>
 
 <script>
-const FB_URL = "https://controlador-e04e0-default-rtdb.firebaseio.com";
+const FB = "https://controlador-e04e0-default-rtdb.firebaseio.com";
+let myP = null, seq = 0, hbTimer = null;
 
-let myPlayer = null; // 1 or 2
-let seq = 0;
-let heartbeatTimer = null;
-
-async function fbGet(path) {
-  const r = await fetch(`${FB_URL}${path}.json`);
-  return await r.json();
-}
-async function fbSet(path, val) {
-  await fetch(`${FB_URL}${path}.json`, {
-    method:"PUT", body:JSON.stringify(val)
+// ── Firebase helpers ──────────────────────────────
+async function fbPut(path, val) {
+  return fetch(`${FB}${path}.json`, {
+    method:"PUT", body:JSON.stringify(val),
+    headers:{"Content-Type":"application/json"}
   });
 }
 
+// ── Connect ───────────────────────────────────────
 async function connect(player) {
-  const status = document.getElementById("status-msg");
-  status.textContent = "Verificando disponibilidade...";
-
+  const st = document.getElementById("cs-status");
+  st.textContent = "Conectando...";
   try {
-    const data = await fbGet("/input");
-    const key = "p" + player;
-    const other = "p" + (player === 1 ? 2 : 1);
-
-    // Check if already 2 connected (both slots taken by OTHER players)
-    const mySlotTaken = data?.[key]?.connected === true;
-    const otherTaken  = data?.[other]?.connected === true;
-
-    // If the other player's slot is also full, deny (2 max rule means only 2 total)
-    // Actually: we only block if THIS slot is taken by a live session
-    // (no session IDs here, simple: overwrite allowed — last one wins the slot)
-
-    await fbSet(`/input/${key}`, {
-      connected: true,
-      dir: "none",
-      seq: 0,
-      ts: Date.now()
+    await fbPut(`/input/p${player}`, {
+      connected: true, dir:"none", seq:0, ts:Date.now()
     });
-
-    myPlayer = player;
-    status.textContent = "Conectado!";
-    showController();
-
-    // Heartbeat every 5s
-    heartbeatTimer = setInterval(() => {
-      fbSet(`/input/p${myPlayer}/ts`, Date.now()).catch(()=>{});
-    }, 5000);
-
+    myP = player;
+    seq = 0;
+    showCtrl();
+    hbTimer = setInterval(() => fbPut(`/input/p${myP}/ts`, Date.now()), 4000);
   } catch(e) {
-    status.textContent = "Erro ao conectar. Tente novamente.";
+    st.textContent = "Erro — tente novamente";
   }
 }
 
-function showController() {
+function showCtrl() {
   document.getElementById("connect-screen").style.display = "none";
   const cs = document.getElementById("ctrl-screen");
   cs.style.display = "flex";
-
-  const label = document.getElementById("player-label");
-  const dot   = document.getElementById("dot-ctrl");
-  const num   = document.getElementById("player-num");
-
-  label.textContent = "J" + myPlayer;
-  num.textContent   = "JOGADOR " + myPlayer;
-
-  if (myPlayer === 1) {
-    document.body.classList.add("player1");
-    dot.style.background = "#00e5ff";
-    dot.style.boxShadow  = "0 0 10px #00e5ff";
-  } else {
-    document.body.classList.add("player2");
-    dot.style.background = "#ff6b35";
-    dot.style.boxShadow  = "0 0 10px #ff6b35";
-  }
+  document.getElementById("info-label").textContent = "J" + myP;
+  const color = myP===1 ? "#00e5ff" : "#ff6b35";
+  const dot = document.getElementById("info-dot");
+  dot.style.background = color;
+  dot.style.boxShadow = `0 0 12px ${color}`;
+  document.body.classList.add("p"+myP);
 }
 
-function disconnect() {
-  if (!myPlayer) return;
-  fbSet(`/input/p${myPlayer}/connected`, false).catch(()=>{});
-  clearInterval(heartbeatTimer);
-  myPlayer = null;
-  document.body.classList.remove("player1","player2");
+async function disconnect() {
+  if (!myP) return;
+  try { await fbPut(`/input/p${myP}/connected`, false); } catch{}
+  clearInterval(hbTimer);
+  myP = null;
+  document.body.classList.remove("p1","p2");
   document.getElementById("ctrl-screen").style.display = "none";
   document.getElementById("connect-screen").style.display = "flex";
-  document.getElementById("status-msg").textContent = "Desconectado.";
+  document.getElementById("cs-status").textContent = "Desconectado.";
 }
 
+// ── Send input ────────────────────────────────────
 async function sendDir(dir) {
-  if (!myPlayer) return;
+  if (!myP) return;
   seq++;
   try {
-    await fbSet(`/input/p${myPlayer}`, {
-      connected: true,
-      dir,
-      seq,
-      ts: Date.now()
+    await fbPut(`/input/p${myP}`, {
+      connected:true, dir, seq, ts:Date.now()
     });
   } catch {}
 }
 
-function sendRestart() { sendDir("restart"); }
+function sendAction(a) { sendDir(a); }
 
-// ── D-pad touch/click handling ────────────────────
-const dpadBtns = document.querySelectorAll(".dpad-btn");
+// ── D-pad — hold to repeat ────────────────────────
+const INITIAL_DELAY = 220;  // ms before repeat starts
+const REPEAT_DELAY  = 90;   // ms between repeats while held
 
-function activate(btn) {
-  btn.classList.add("active");
-  sendDir(btn.dataset.dir);
+const btns = document.querySelectorAll(".dbtn[data-dir]");
+const holdTimers = {};
+
+function startPress(btn) {
+  const dir = btn.dataset.dir;
+  if (!dir || holdTimers[dir]) return;
+
+  btn.classList.add("pressed");
+
+  // Haptic feedback
+  if (navigator.vibrate) navigator.vibrate(18);
+
+  sendDir(dir);
+
+  holdTimers[dir] = setTimeout(function repeat() {
+    if (holdTimers[dir] != null) {
+      sendDir(dir);
+      holdTimers[dir] = setTimeout(repeat, REPEAT_DELAY);
+    }
+  }, INITIAL_DELAY);
 }
-function deactivate(btn) {
-  btn.classList.remove("active");
+
+function endPress(btn) {
+  const dir = btn.dataset.dir;
+  if (!dir) return;
+  btn.classList.remove("pressed");
+  clearTimeout(holdTimers[dir]);
+  delete holdTimers[dir];
 }
 
-dpadBtns.forEach(btn => {
-  // Pointer events — works for touch and mouse
-  btn.addEventListener("pointerdown", e => {
-    e.preventDefault();
-    activate(btn);
-  });
-  btn.addEventListener("pointerup",   e => { e.preventDefault(); deactivate(btn); });
-  btn.addEventListener("pointerleave",e => { deactivate(btn); });
+btns.forEach(btn => {
+  // Pointer events handle both touch and mouse cleanly
+  btn.addEventListener("pointerdown",  e => { e.preventDefault(); btn.setPointerCapture(e.pointerId); startPress(btn); });
+  btn.addEventListener("pointerup",    e => { e.preventDefault(); endPress(btn); });
+  btn.addEventListener("pointercancel",e => { endPress(btn); });
+  btn.addEventListener("pointerleave", e => { endPress(btn); });
 });
 
-// Prevent scroll on touch
-document.addEventListener("touchmove", e => e.preventDefault(), {passive:false});
+// Block page scroll/zoom on touch
+document.addEventListener("touchstart", e => e.preventDefault(), {passive:false});
+document.addEventListener("touchmove",  e => e.preventDefault(), {passive:false});
 
-// Window unload — mark disconnected
+// Keyboard shortcuts (for testing on desktop)
+const kmap = {ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right",
+              w:"up",s:"down",a:"left",d:"right",r:"restart"};
+const kDown = {};
+document.addEventListener("keydown", e => {
+  if (kDown[e.key]) return; kDown[e.key] = true;
+  const dir = kmap[e.key];
+  if (dir) { e.preventDefault(); sendDir(dir); }
+});
+document.addEventListener("keyup", e => { delete kDown[e.key]; });
+
+// Disconnect on page close
 window.addEventListener("beforeunload", () => {
-  if (myPlayer) {
-    navigator.sendBeacon(
-      `${FB_URL}/input/p${myPlayer}/connected.json`,
-      JSON.stringify(false)
-    );
-  }
+  if (myP) navigator.sendBeacon(`${FB}/input/p${myP}/connected.json`, JSON.stringify(false));
 });
 </script>
 </body>
