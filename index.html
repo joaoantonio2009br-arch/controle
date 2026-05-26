@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover"/>
-  <title>Controle — Carregadores</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&family=Syne:wght@800&display=swap" rel="stylesheet">
-  <style>
-   *{
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+<title>Controle — Carregadores</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+<style>
+*{
   margin:0;
   padding:0;
   box-sizing:border-box;
@@ -15,228 +18,218 @@
 }
 
 :root{
-  --bg:#080810;
-  --card:#111120;
-  --border:#1e1e36;
+  --bg:#000;
+  --card:#0f0f14;
+  --border:#202030;
+
   --p1:#00e5ff;
   --p2:#ff6b35;
-  --accent:#fff;
-  --muted:#44446a;
+
+  --muted:#55556d;
 }
 
 html,body{
   width:100%;
   height:100%;
-  background:var(--bg);
-  color:#e8e8f0;
-  font-family:'Space Mono',monospace;
   overflow:hidden;
+
+  background:#000;
+  color:white;
+
+  font-family:'Space Mono',monospace;
   touch-action:none;
 }
 
-/* ── ROTATE PROMPT ── */
+/* ROTATE */
+
 #rotate{
   display:none;
+
   position:fixed;
   inset:0;
   z-index:999;
-  background:var(--bg);
+
+  background:#000;
+
   align-items:center;
   justify-content:center;
   flex-direction:column;
   gap:20px;
-  font-size:13px;
-  color:var(--muted);
+
   text-align:center;
+  color:#666;
 }
 
-#rotate svg{
-  width:56px;
-  height:56px;
-  animation:rotateSvg 2.5s ease-in-out infinite;
+@media (orientation:portrait){
+  #rotate{
+    display:flex;
+  }
+
+  #app{
+    display:none!important;
+  }
 }
 
-@keyframes rotateSvg{
-  0%,100%{transform:rotate(0deg);}
-  40%{transform:rotate(-90deg);}
-  60%{transform:rotate(-90deg);}
-}
+/* APP */
 
-@media(orientation:portrait){
-  #rotate{display:flex;}
-  #app{display:none!important;}
-}
-
-/* ── APP SHELL ── */
 #app{
   width:100%;
   height:100%;
-  display:flex;
-  align-items:stretch;
-  justify-content:center;
 }
 
-/* ── CONNECT SCREEN ── */
-#connect-screen{
+/* CONNECT */
+
+#connect{
+  width:100%;
+  height:100%;
+
   display:flex;
-  flex-direction:column;
   align-items:center;
   justify-content:center;
+  flex-direction:column;
+
   gap:24px;
-  padding:32px;
-  width:100%;
+  padding:24px;
 }
 
-#connect-screen h1{
+.logo{
   font-family:'Syne',sans-serif;
-  font-size:28px;
+  font-size:34px;
   font-weight:800;
+
   background:linear-gradient(90deg,var(--p1),var(--p2));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
-.cs-sub{
-  color:var(--muted);
-  font-size:12px;
+.sub{
   text-align:center;
+  color:#66668f;
+  font-size:12px;
   line-height:1.8;
 }
 
-.btn-row{
+.row{
   display:flex;
-  gap:16px;
+  gap:18px;
 }
 
-.btn-player{
-  padding:16px 32px;
-  border-radius:14px;
+.pick{
   border:none;
+  border-radius:16px;
+
+  padding:18px 34px;
+
   font-family:'Space Mono',monospace;
-  font-size:13px;
+  font-size:14px;
   font-weight:700;
-  letter-spacing:1px;
+
   cursor:pointer;
-  transition:transform .1s,opacity .1s,box-shadow .2s;
+
+  transition:.1s;
 }
 
-.btn-player:active{
-  transform:scale(.93);
-  opacity:.8;
+.pick:active{
+  transform:scale(.92);
 }
 
-.btn-p1{
+.p1{
   background:var(--p1);
-  color:#000;
-  box-shadow:0 0 24px var(--p1)55;
+  color:black;
 }
 
-.btn-p2{
+.p2{
   background:var(--p2);
-  color:#fff;
-  box-shadow:0 0 24px var(--p2)55;
+  color:white;
 }
 
-#cs-status{
+#status{
+  min-height:18px;
+  color:#66668f;
   font-size:11px;
-  color:var(--muted);
-  min-height:16px;
 }
 
-/* ── CONTROLLER SCREEN ── */
-#ctrl-screen{
+/* CONTROLLER */
+
+#controller{
   display:none;
+
   width:100%;
-  flex-direction:row;
-  align-items:center;
-  justify-content:flex-start;
-  padding:12px 20px 12px 8px;
-  gap:28px;
+  height:100%;
+
   position:relative;
 }
 
-/* ── PLAYER INFO ── */
-#info-panel{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:10px;
-  min-width:56px;
-}
+/* PLAYER */
 
-.glow-dot{
-  width:16px;
-  height:16px;
-  border-radius:50%;
-  transition:box-shadow .3s;
-}
+#player{
+  position:absolute;
 
-#info-label{
+  left:22px;
+  top:18px;
+
   font-family:'Syne',sans-serif;
-  font-size:22px;
+  font-size:34px;
   font-weight:800;
 }
 
-#info-sub{
-  font-size:9px;
-  color:var(--muted);
-  letter-spacing:1px;
-}
+/* CENTER TEXT */
 
-/* ── DPAD ── */
-#dpad{
-  display:grid;
-  grid-template-columns:repeat(3, 1fr);
-  grid-template-rows:repeat(3, 1fr);
-  gap:8px;
-
-  height:calc(100vh - 24px);
-  width:calc(100vh - 24px);
-
-  max-height:220px;
-  max-width:220px;
-
-  margin-left:-12px;
-}
-
-/* ── UDEV CENTER ── */
-#udev-center{
+#middle{
   position:absolute;
+
   left:50%;
   top:50%;
+
   transform:translate(-50%,-50%);
-  pointer-events:none;
 
   font-family:'Syne',sans-serif;
-  font-size:38px;
+  font-size:48px;
   font-weight:800;
   letter-spacing:6px;
 
-  color:rgba(255,255,255,.06);
+  color:rgba(255,255,255,.04);
 
-  text-shadow:
-    0 0 12px rgba(255,255,255,.06),
-    0 0 24px rgba(0,229,255,.08);
-
-  white-space:nowrap;
+  pointer-events:none;
 }
 
-/* ── BUTTONS ── */
+/* DPAD */
+
+#dpad{
+  position:absolute;
+
+  left:18px;
+  top:50%;
+
+  transform:translateY(-50%);
+
+  width:230px;
+  height:230px;
+
+  display:grid;
+
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:repeat(3,1fr);
+
+  gap:10px;
+}
+
 .dbtn{
-  border-radius:14px;
+  border-radius:20px;
+
   background:var(--card);
+
   border:2px solid var(--border);
 
   display:flex;
   align-items:center;
   justify-content:center;
 
-  font-size:26px;
-  cursor:pointer;
+  font-size:34px;
 
   transition:
-    background .06s,
     transform .06s,
+    background .06s,
     border-color .06s,
     box-shadow .06s;
 
@@ -246,19 +239,17 @@ html,body{
 
 .dbtn::after{
   content:'';
+
   position:absolute;
   inset:0;
 
   background:
-    radial-gradient(
-      circle at center,
-      rgba(255,255,255,.18) 0%,
-      transparent 70%
-    );
+    radial-gradient(circle at center,
+      rgba(255,255,255,.15),
+      transparent 70%);
 
   opacity:0;
-  transition:opacity .12s;
-  border-radius:inherit;
+  transition:opacity .1s;
 }
 
 .dbtn.pressed::after{
@@ -269,289 +260,406 @@ html,body{
   transform:scale(.88);
 }
 
-.dbtn-center{
-  background:transparent;
-  border-color:transparent;
-  cursor:default;
+.empty{
+  opacity:0;
+  pointer-events:none;
 }
 
-/* ── ACTION PANEL ── */
-#action-panel{
+/* ACTIONS */
+
+#actions{
+  position:absolute;
+
+  right:18px;
+  top:50%;
+
+  transform:translateY(-50%);
+
   display:flex;
   flex-direction:column;
-  align-items:center;
-  gap:10px;
-  min-width:64px;
+  gap:14px;
 }
 
 .abtn{
-  padding:10px 14px;
-  border-radius:10px;
-  border:1px solid var(--border);
+  width:90px;
 
-  background:var(--card);
+  padding:14px;
+
+  border:none;
+  border-radius:14px;
+
+  background:#111118;
+  border:1px solid #242438;
+
+  color:white;
 
   font-family:'Space Mono',monospace;
-  font-size:10px;
-  letter-spacing:1px;
+  font-size:11px;
 
   cursor:pointer;
-  text-align:center;
-  line-height:1.5;
 
-  transition:background .1s,transform .08s;
-
-  width:64px;
+  transition:.1s;
 }
 
 .abtn:active{
   transform:scale(.92);
-  background:#1a1a2e;
 }
 
-#btn-restart{
-  color:#88aaff;
-}
+/* THEMES */
 
-#btn-out{
-  color:var(--muted);
-  font-size:9px;
-}
-
-/* ── PLAYER THEMES ── */
-body.p1 #info-label{
+body.p1 #player{
   color:var(--p1);
 }
 
 body.p1 .dbtn{
-  border-color:var(--p1)33;
+  border-color:#00e5ff33;
 }
 
 body.p1 .dbtn.pressed{
   border-color:var(--p1);
-  background:var(--p1)18;
-  box-shadow:0 0 16px var(--p1)44;
+  background:#00e5ff18;
+
+  box-shadow:0 0 18px #00e5ff44;
 }
 
-body.p1 #btn-restart{
-  border-color:var(--p1)55;
-  color:var(--p1);
-}
-
-body.p2 #info-label{
+body.p2 #player{
   color:var(--p2);
 }
 
 body.p2 .dbtn{
-  border-color:var(--p2)33;
+  border-color:#ff6b3533;
 }
 
 body.p2 .dbtn.pressed{
   border-color:var(--p2);
-  background:var(--p2)18;
-  box-shadow:0 0 16px var(--p2)44;
-}
+  background:#ff6b3518;
 
-body.p2 #btn-restart{
-  border-color:var(--p2)55;
-  color:var(--p2);
+  box-shadow:0 0 18px #ff6b3544;
 }
-
-/* ── VISUAL FEEDBACK ── */
-@keyframes bump{
-  0%,100%{
-    transform:scale(1);
-  }
-  50%{
-    transform:scale(.85);
-  }
-}
-  </style>
+</style>
 </head>
 <body>
 
-<!-- Rotate hint -->
 <div id="rotate">
-  <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="14" y="8" width="28" height="40" rx="5" stroke="#44446a" stroke-width="2.5"/>
-    <circle cx="28" cy="43" r="2" fill="#44446a"/>
-    <path d="M36 4 L42 10 L36 16" stroke="#00e5ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M42 10 Q20 10 20 28" stroke="#00e5ff" stroke-width="2" stroke-linecap="round" fill="none"/>
-  </svg>
-  <span>Gire o celular<br>para jogar deitado</span>
+  Gire o celular para jogar deitado
 </div>
 
 <div id="app">
 
-  <!-- CONNECTION -->
-  <div id="connect-screen">
-    <h1>CARREGADORES</h1>
-    <p class="cs-sub">Escolha seu jogador.<br>Máximo 2 controles simultâneos.</p>
-    <div class="btn-row">
-      <button class="btn-player btn-p1" onclick="connect(1)">● J1</button>
-      <button class="btn-player btn-p2" onclick="connect(2)">● J2</button>
+  <!-- CONNECT -->
+
+  <div id="connect">
+
+    <div class="logo">CARREGADORES</div>
+
+    <div class="sub">
+      Escolha seu jogador<br>
+      Máximo 2 controles simultâneos
     </div>
-    <div id="cs-status">Escolha seu jogador</div>
+
+    <div class="row">
+      <button class="pick p1" onclick="connect(1)">● J1</button>
+      <button class="pick p2" onclick="connect(2)">● J2</button>
+    </div>
+
+    <div id="status">
+      Escolha seu jogador
+    </div>
+
   </div>
 
   <!-- CONTROLLER -->
-  <div id="ctrl-screen">
 
-    <div id="info-panel">
-      <div class="glow-dot" id="info-dot"></div>
-      <div id="info-label">J1</div>
-      <div id="info-sub">JOGADOR</div>
-    </div>
+  <div id="controller">
+
+    <div id="player">J1</div>
+
+    <div id="middle">UDEV</div>
+
+    <!-- DPAD -->
 
     <div id="dpad">
-      <!-- row 1: up -->
-      <div></div>
-      <div class="dbtn" id="btn-up"    data-dir="up">↑</div>
-      <div></div>
-      <!-- row 2: left/center/right -->
-      <div class="dbtn" id="btn-left"  data-dir="left">←</div>
-      <div class="dbtn-center dbtn"></div>
-      <div class="dbtn" id="btn-right" data-dir="right">→</div>
-      <!-- row 3: down -->
-      <div></div>
-      <div class="dbtn" id="btn-down"  data-dir="down">↓</div>
-      <div></div>
+
+      <div class="empty"></div>
+
+      <div class="dbtn" data-dir="up">
+        ↑
+      </div>
+
+      <div class="empty"></div>
+
+      <div class="dbtn" data-dir="left">
+        ←
+      </div>
+
+      <div class="empty"></div>
+
+      <div class="dbtn" data-dir="right">
+        →
+      </div>
+
+      <div class="empty"></div>
+
+      <div class="dbtn" data-dir="down">
+        ↓
+      </div>
+
+      <div class="empty"></div>
+
     </div>
 
-    <div id="action-panel">
-      <button class="abtn" id="btn-restart" onclick="sendAction('restart')">↺<br>RESTART</button>
-      <button class="abtn" id="btn-out" onclick="disconnect()">SAIR</button>
+    <!-- ACTIONS -->
+
+    <div id="actions">
+
+      <button class="abtn" onclick="sendAction('restart')">
+        ↺<br>RESTART
+      </button>
+
+      <button class="abtn" onclick="disconnect()">
+        SAIR
+      </button>
+
     </div>
 
   </div>
+
 </div>
 
 <script>
 const FB = "https://controlador-e04e0-default-rtdb.firebaseio.com";
-let myP = null, seq = 0, hbTimer = null;
 
-// ── Firebase helpers ──────────────────────────────
-async function fbPut(path, val) {
-  return fetch(`${FB}${path}.json`, {
-    method:"PUT", body:JSON.stringify(val),
-    headers:{"Content-Type":"application/json"}
+let myP = null;
+let seq = 0;
+let hbTimer = null;
+
+/* FIREBASE */
+
+async function fbPut(path,val){
+  return fetch(`${FB}${path}.json`,{
+    method:"PUT",
+    body:JSON.stringify(val),
+    headers:{
+      "Content-Type":"application/json"
+    }
   });
 }
 
-// ── Connect ───────────────────────────────────────
-async function connect(player) {
-  const st = document.getElementById("cs-status");
+/* CONNECT */
+
+async function connect(player){
+
+  const st = document.getElementById("status");
+
   st.textContent = "Conectando...";
-  try {
-    await fbPut(`/input/p${player}`, {
-      connected: true, dir:"none", seq:0, ts:Date.now()
+
+  try{
+
+    await fbPut(`/input/p${player}`,{
+      connected:true,
+      dir:"none",
+      seq:0,
+      ts:Date.now()
     });
+
     myP = player;
     seq = 0;
-    showCtrl();
-    hbTimer = setInterval(() => fbPut(`/input/p${myP}/ts`, Date.now()), 4000);
-  } catch(e) {
-    st.textContent = "Erro — tente novamente";
+
+    showController();
+
+    hbTimer = setInterval(()=>{
+      fbPut(`/input/p${myP}/ts`,Date.now());
+    },4000);
+
+  }catch(e){
+
+    st.textContent = "Erro ao conectar";
   }
 }
 
-function showCtrl() {
-  document.getElementById("connect-screen").style.display = "none";
-  const cs = document.getElementById("ctrl-screen");
-  cs.style.display = "flex";
-  document.getElementById("info-label").textContent = "J" + myP;
-  const color = myP===1 ? "#00e5ff" : "#ff6b35";
-  const dot = document.getElementById("info-dot");
-  dot.style.background = color;
-  dot.style.boxShadow = `0 0 12px ${color}`;
+function showController(){
+
+  document.getElementById("connect").style.display = "none";
+  document.getElementById("controller").style.display = "block";
+
+  document.getElementById("player").textContent =
+    "J" + myP;
+
+  document.body.classList.remove("p1","p2");
   document.body.classList.add("p"+myP);
 }
 
-async function disconnect() {
-  if (!myP) return;
-  try { await fbPut(`/input/p${myP}/connected`, false); } catch{}
+/* DISCONNECT */
+
+async function disconnect(){
+
+  if(!myP) return;
+
+  try{
+    await fbPut(`/input/p${myP}/connected`,false);
+  }catch{}
+
   clearInterval(hbTimer);
+
   myP = null;
+
+  document.getElementById("controller").style.display = "none";
+  document.getElementById("connect").style.display = "flex";
+
   document.body.classList.remove("p1","p2");
-  document.getElementById("ctrl-screen").style.display = "none";
-  document.getElementById("connect-screen").style.display = "flex";
-  document.getElementById("cs-status").textContent = "Desconectado.";
 }
 
-// ── Send input ────────────────────────────────────
-async function sendDir(dir) {
-  if (!myP) return;
+/* SEND */
+
+async function sendDir(dir){
+
+  if(!myP) return;
+
   seq++;
-  try {
-    await fbPut(`/input/p${myP}`, {
-      connected:true, dir, seq, ts:Date.now()
+
+  try{
+
+    await fbPut(`/input/p${myP}`,{
+      connected:true,
+      dir,
+      seq,
+      ts:Date.now()
     });
-  } catch {}
+
+  }catch{}
 }
 
-function sendAction(a) { sendDir(a); }
+function sendAction(a){
+  sendDir(a);
+}
 
-// ── D-pad — hold to repeat ────────────────────────
-const INITIAL_DELAY = 220;  // ms before repeat starts
-const REPEAT_DELAY  = 90;   // ms between repeats while held
+/* DPAD */
 
-const btns = document.querySelectorAll(".dbtn[data-dir]");
+const btns = document.querySelectorAll(".dbtn");
+
 const holdTimers = {};
 
-function startPress(btn) {
+const INITIAL_DELAY = 200;
+const REPEAT_DELAY = 80;
+
+function startPress(btn){
+
   const dir = btn.dataset.dir;
-  if (!dir || holdTimers[dir]) return;
+
+  if(!dir || holdTimers[dir]) return;
 
   btn.classList.add("pressed");
 
-  // Haptic feedback
-  if (navigator.vibrate) navigator.vibrate(18);
+  if(navigator.vibrate){
+    navigator.vibrate(12);
+  }
 
   sendDir(dir);
 
-  holdTimers[dir] = setTimeout(function repeat() {
-    if (holdTimers[dir] != null) {
+  holdTimers[dir] = setTimeout(function repeat(){
+
+    if(holdTimers[dir]){
+
       sendDir(dir);
-      holdTimers[dir] = setTimeout(repeat, REPEAT_DELAY);
+
+      holdTimers[dir] =
+        setTimeout(repeat,REPEAT_DELAY);
     }
-  }, INITIAL_DELAY);
+
+  },INITIAL_DELAY);
 }
 
-function endPress(btn) {
+function endPress(btn){
+
   const dir = btn.dataset.dir;
-  if (!dir) return;
+
+  if(!dir) return;
+
   btn.classList.remove("pressed");
+
   clearTimeout(holdTimers[dir]);
+
   delete holdTimers[dir];
 }
 
-btns.forEach(btn => {
-  // Pointer events handle both touch and mouse cleanly
-  btn.addEventListener("pointerdown",  e => { e.preventDefault(); btn.setPointerCapture(e.pointerId); startPress(btn); });
-  btn.addEventListener("pointerup",    e => { e.preventDefault(); endPress(btn); });
-  btn.addEventListener("pointercancel",e => { endPress(btn); });
-  btn.addEventListener("pointerleave", e => { endPress(btn); });
+btns.forEach(btn=>{
+
+  btn.addEventListener("pointerdown",e=>{
+
+    e.preventDefault();
+
+    btn.setPointerCapture(e.pointerId);
+
+    startPress(btn);
+  });
+
+  btn.addEventListener("pointerup",()=>{
+
+    endPress(btn);
+  });
+
+  btn.addEventListener("pointercancel",()=>{
+
+    endPress(btn);
+  });
+
+  btn.addEventListener("pointerleave",()=>{
+
+    endPress(btn);
+  });
 });
 
-// Block page scroll/zoom on touch
-document.addEventListener("touchstart", e => e.preventDefault(), {passive:false});
-document.addEventListener("touchmove",  e => e.preventDefault(), {passive:false});
+/* PREVENT ZOOM */
 
-// Keyboard shortcuts (for testing on desktop)
-const kmap = {ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right",
-              w:"up",s:"down",a:"left",d:"right",r:"restart"};
-const kDown = {};
-document.addEventListener("keydown", e => {
-  if (kDown[e.key]) return; kDown[e.key] = true;
+document.addEventListener("touchstart",e=>{
+  e.preventDefault();
+},{passive:false});
+
+document.addEventListener("touchmove",e=>{
+  e.preventDefault();
+},{passive:false});
+
+/* KEYBOARD TEST */
+
+const kmap = {
+  ArrowUp:"up",
+  ArrowDown:"down",
+  ArrowLeft:"left",
+  ArrowRight:"right",
+
+  w:"up",
+  s:"down",
+  a:"left",
+  d:"right",
+
+  r:"restart"
+};
+
+document.addEventListener("keydown",e=>{
+
   const dir = kmap[e.key];
-  if (dir) { e.preventDefault(); sendDir(dir); }
-});
-document.addEventListener("keyup", e => { delete kDown[e.key]; });
 
-// Disconnect on page close
-window.addEventListener("beforeunload", () => {
-  if (myP) navigator.sendBeacon(`${FB}/input/p${myP}/connected.json`, JSON.stringify(false));
+  if(dir){
+
+    e.preventDefault();
+
+    sendDir(dir);
+  }
+});
+
+/* EXIT */
+
+window.addEventListener("beforeunload",()=>{
+
+  if(myP){
+
+    navigator.sendBeacon(
+      `${FB}/input/p${myP}/connected.json`,
+      JSON.stringify(false)
+    );
+  }
 });
 </script>
+
 </body>
 </html>
